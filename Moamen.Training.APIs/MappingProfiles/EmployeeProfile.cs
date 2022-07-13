@@ -13,6 +13,9 @@ namespace Moamen.Training.APIs.MappingProfiles
 
             CreateMap<EmployeePost, Employee>()
                 ;
+            
+            CreateMap<EmployeePut, Employee>()
+                ;
         }
     }
 

@@ -50,5 +50,12 @@
         public DateTime DOB { get; set; }
     }
 
-
+    public class EmployeePut
+    {
+        public int Age { get; set; }
+        public int Salary { get; set; }
+        public string? Name { get; set; }
+        public DateTime DOB { get; set; }
+        public int DepartmentId { get; set; }
+    }
 }
