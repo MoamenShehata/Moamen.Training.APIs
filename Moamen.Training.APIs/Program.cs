@@ -14,7 +14,11 @@ builder.Services.AddControllers(op =>
     op.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
     op.InputFormatters.Add(new XmlDataContractSerializerInputFormatter(op));
     //op.OutputFormatters.Insert(0, new XmlDataContractSerializerOutputFormatter());
-}).AddNewtonsoftJson();
+}).AddNewtonsoftJson()
+.ConfigureApiBehaviorOptions(setupAction =>
+{
+    setupAction.SuppressModelStateInvalidFilter = true;
+});
 
 builder.Services.AddDbContext<DataContext>(optionsBuilder =>
 {

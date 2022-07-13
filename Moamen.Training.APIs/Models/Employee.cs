@@ -1,4 +1,6 @@
-﻿namespace Moamen.Training.APIs.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Moamen.Training.APIs.Models
 {
     public class Employee
     {
@@ -38,6 +40,7 @@
 
     public class DepartmentPost
     {
+        [Required(ErrorMessage ="Name is required ya sir")]
         public string Name { get; set; }
         public ICollection<EmployeePost> Employees { get; set; } = new List<EmployeePost>();
 
@@ -54,6 +57,8 @@
     {
         public int Age { get; set; }
         public int Salary { get; set; }
+
+        [MaxLength(5)]
         public string? Name { get; set; }
         public DateTime DOB { get; set; }
         public int DepartmentId { get; set; }

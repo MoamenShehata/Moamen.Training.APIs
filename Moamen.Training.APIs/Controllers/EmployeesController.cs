@@ -104,7 +104,12 @@ namespace Moamen.Training.APIs.Controllers
                 return NotFound();
 
             var employeeUpdate = mapper.Map<EmployeePut>(employee);
-            patchDoc.ApplyTo(employeeUpdate);
+            patchDoc.ApplyTo(employeeUpdate, ModelState);
+
+            TryValidateModel(employeeUpdate);
+
+            if (!ModelState.IsValid)
+                return new UnprocessableEntityResult(ModelState);
 
             mapper.Map(employeeUpdate, employee);
 

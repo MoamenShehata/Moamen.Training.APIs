@@ -45,6 +45,9 @@ namespace Moamen.Training.APIs.Controllers
             if (departmentPost == null)
                 return BadRequest();
 
+            if (!ModelState.IsValid)
+                return new UnprocessableEntityResult(ModelState);
+
             var department = mapper.Map<Department>(departmentPost);
 
             var isCreated = departmentService.Create(department);
