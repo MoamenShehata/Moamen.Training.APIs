@@ -39,6 +39,8 @@
     public class DepartmentPost
     {
         public string Name { get; set; }
+        public ICollection<EmployeePost> Employees { get; set; } /*= new List<Employee>();*/
+
     }
 
     public class EmployeePost
