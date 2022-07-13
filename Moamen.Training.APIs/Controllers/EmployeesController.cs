@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Moamen.Training.APIs.Models;
 using Moamen.Training.APIs.Services;
@@ -35,24 +36,24 @@ namespace Moamen.Training.APIs.Controllers
             return Ok(mapper.Map<EmployeeGet>(employee));
         }
 
-        //[HttpPut("{id}")]
-        //public IActionResult UpdateEmployee(int id, [FromBody] EmployeePut employeePut)
-        //{
-        //    if (employeePut == null)
-        //        return BadRequest();
+        [HttpPut("{id}")]
+        public IActionResult UpdateEmployee(int id, [FromBody] EmployeePut employeePut)
+        {
+            if (employeePut == null)
+                return BadRequest();
 
-        //    var employee = employeeService.GetById(id);
-        //    if (employee == null)
-        //        return NotFound();
+            var employee = employeeService.GetById(id);
+            if (employee == null)
+                return NotFound();
 
-        //    mapper.Map(employeePut, employee);
+            mapper.Map(employeePut, employee);
 
-        //    var isUpdated = employeeService.Update(employee);
-        //    if (!isUpdated)
-        //        throw new Exception("Failed to update Employee instance");
+            var isUpdated = employeeService.Update(employee);
+            if (!isUpdated)
+                throw new Exception("Failed to update Employee instance");
 
-        //    return NoContent();
-        //}
+            return NoContent();
+        }
 
 
         //Upserting
@@ -62,34 +63,56 @@ namespace Moamen.Training.APIs.Controllers
         //So Insert + Update 
         //So UPSERT
         //Notice we wont be able to test the insert case for SQL Server cause it does not allow adding value to identity columns
-        [HttpPut("{id}")]
-        public IActionResult UpdateEmployee(int id, [FromBody] EmployeePut employeePut)
+        //[HttpPut("{id}")]
+        //public IActionResult UpdateEmployee(int id, [FromBody] EmployeePut employeePut)
+        //{
+        //    if (employeePut == null)
+        //        return BadRequest();
+
+        //    var employee = employeeService.GetById(id);
+        //    if (employee == null)
+        //    {
+        //        var employeeToCreate = mapper.Map<Employee>(employeePut);
+        //        employeeToCreate.Id = id;
+        //        var isCreated = employeeService.Create(employeeToCreate);
+        //        if (!isCreated)
+        //            throw new Exception("Creation failed!");
+
+        //        var createdDto = mapper.Map<EmployeeGet>(employeeToCreate);
+        //        return CreatedAtRoute(nameof(GetEmployee), new { id }, createdDto);
+        //    }
+        //    else
+        //    {
+        //        mapper.Map(employeePut, employee);
+
+        //        var isUpdated = employeeService.Update(employee);
+        //        if (!isUpdated)
+        //            throw new Exception("Failed to update Employee instance");
+
+        //        return NoContent();
+        //    }
+        //}
+
+        [HttpPatch("{id}")]
+        public IActionResult PartiallyUpdateEmployee(int id, [FromBody] JsonPatchDocument<EmployeePut> patchDoc)
         {
-            if (employeePut == null)
+            if (patchDoc == null)
                 return BadRequest();
 
             var employee = employeeService.GetById(id);
             if (employee == null)
-            {
-                var employeeToCreate = mapper.Map<Employee>(employeePut);
-                employeeToCreate.Id = id;
-                var isCreated = employeeService.Create(employeeToCreate);
-                if (!isCreated)
-                    throw new Exception("Creation failed!");
+                return NotFound();
 
-                var createdDto = mapper.Map<EmployeeGet>(employeeToCreate);
-                return CreatedAtRoute(nameof(GetEmployee), new { id }, createdDto);
-            }
-            else
-            {
-                mapper.Map(employeePut, employee);
+            var employeeUpdate = mapper.Map<EmployeePut>(employee);
+            patchDoc.ApplyTo(employeeUpdate);
 
-                var isUpdated = employeeService.Update(employee);
-                if (!isUpdated)
-                    throw new Exception("Failed to update Employee instance");
+            mapper.Map(employeeUpdate, employee);
 
-                return NoContent();
-            }
+            var isUpdated = employeeService.Update(employee);
+            if (!isUpdated)
+                throw new Exception("Failed to update Employee instance");
+
+            return NoContent();
         }
     }
 }

@@ -15,6 +15,7 @@ namespace Moamen.Training.APIs.MappingProfiles
                 ;
             
             CreateMap<EmployeePut, Employee>()
+                .ReverseMap()
                 ;
         }
     }

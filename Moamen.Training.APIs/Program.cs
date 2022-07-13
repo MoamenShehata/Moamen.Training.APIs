@@ -14,7 +14,7 @@ builder.Services.AddControllers(op =>
     op.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
     op.InputFormatters.Add(new XmlDataContractSerializerInputFormatter(op));
     //op.OutputFormatters.Insert(0, new XmlDataContractSerializerOutputFormatter());
-});
+}).AddNewtonsoftJson();
 
 builder.Services.AddDbContext<DataContext>(optionsBuilder =>
 {
