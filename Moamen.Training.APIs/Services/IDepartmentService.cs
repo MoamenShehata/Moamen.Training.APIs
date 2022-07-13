@@ -8,6 +8,7 @@ namespace Moamen.Training.APIs.Services
         IEnumerable<Department> GetAll();
         Department GetById(int id);
         bool Create(Department department);
+        bool Delete(Department department);
     }
 
     public class DepartmentService : IDepartmentService
@@ -25,6 +26,12 @@ namespace Moamen.Training.APIs.Services
             return department.Id != 0;
         }
 
+        public bool Delete(Department department)
+        {
+            dataContext.Departments.Remove(department);
+            var affectedRows = dataContext.SaveChanges();
+            return affectedRows == 1;
+        }
         public IEnumerable<Department> GetAll() => dataContext.Departments.ToList();
         public Department GetById(int id) => dataContext.Departments.Find(id);
     }

@@ -12,6 +12,7 @@ builder.Services.AddControllers(op =>
 {
     op.ReturnHttpNotAcceptable = true;
     op.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+    op.InputFormatters.Add(new XmlDataContractSerializerInputFormatter(op));
     //op.OutputFormatters.Insert(0, new XmlDataContractSerializerOutputFormatter());
 });
 

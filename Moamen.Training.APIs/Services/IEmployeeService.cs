@@ -11,6 +11,7 @@ namespace Moamen.Training.APIs.Services
         Employee GetById(int id);
         Employee GetByIdAndDepartmentId(int id, int departmentId);
         bool Create(Employee employee);
+        bool CreateRange(IEnumerable<Employee> employees);
     }
 
 
@@ -29,6 +30,12 @@ namespace Moamen.Training.APIs.Services
             return employee.Id != 0;
         }
 
+        public bool CreateRange(IEnumerable<Employee> employees)
+        {
+            dataContext.Employees.AddRange(employees);
+            dataContext.SaveChanges();
+            return employees.All(e => e.Id != 0);
+        }
         public IEnumerable<Employee> GetAll() => dataContext.Employees.ToList();
         public IEnumerable<Employee> GetAllByDepartment(int departmentId) => dataContext.Employees.Where(e => e.DepartmentId == departmentId).ToList();
         public Employee GetById(int id) => dataContext.Employees.Include(e => e.Department).SingleOrDefault(e => e.Id == id);

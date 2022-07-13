@@ -106,5 +106,19 @@ namespace Moamen.Training.APIs.Controllers
             return Ok(mapper.Map<EmployeeGet>(employee));
         }
 
+        [HttpDelete("{departmentId}")]
+        public IActionResult DeleteDepartment(int departmentId)
+        {
+            var department = departmentService.GetById(departmentId);
+            if (department == null)
+                return NotFound();
+
+            var isDeleted = departmentService.Delete(department);
+            if (!isDeleted)
+                throw new Exception("Deletion was no possible");
+
+            return NoContent();
+        }
+
     }
 }
