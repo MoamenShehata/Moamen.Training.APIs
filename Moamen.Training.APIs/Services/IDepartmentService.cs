@@ -7,6 +7,7 @@ namespace Moamen.Training.APIs.Services
     {
         IEnumerable<Department> GetAll();
         Department GetById(int id);
+        bool Create(Department department);
     }
 
     public class DepartmentService : IDepartmentService
@@ -15,6 +16,13 @@ namespace Moamen.Training.APIs.Services
         public DepartmentService(DataContext dataContext)
         {
             this.dataContext = dataContext;
+        }
+
+        public bool Create(Department department)
+        {
+            dataContext.Departments.Add(department);
+            dataContext.SaveChanges();
+            return department.Id != 0;
         }
 
         public IEnumerable<Department> GetAll() => dataContext.Departments.ToList();

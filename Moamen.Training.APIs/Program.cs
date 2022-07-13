@@ -11,8 +11,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(op =>
 {
     op.ReturnHttpNotAcceptable = true;
-    op.OutputFormatters.Insert(0, new XmlDataContractSerializerOutputFormatter());
-    //op.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+    op.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+    //op.OutputFormatters.Insert(0, new XmlDataContractSerializerOutputFormatter());
 });
 
 builder.Services.AddDbContext<DataContext>(optionsBuilder =>

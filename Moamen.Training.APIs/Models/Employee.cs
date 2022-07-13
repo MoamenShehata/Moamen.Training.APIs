@@ -35,4 +35,18 @@
         public int Id { get; set; }
         public string Name { get; set; }
     }
+
+    public class DepartmentPost
+    {
+        public string Name { get; set; }
+    }
+
+    public class EmployeePost
+    {
+        public int Salary { get; set; }
+        public string Name { get; set; }
+        public DateTime DOB { get; set; }
+    }
+
+
 }

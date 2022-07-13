@@ -10,6 +10,9 @@ namespace Moamen.Training.APIs.MappingProfiles
             CreateMap<Employee, EmployeeGet>()
                 .ForMember(eg => eg.Department, op => op.MapFrom(e => e.Department.Name))
                 ;
+
+            CreateMap<EmployeePost, Employee>()
+                ;
         }
     }
 
@@ -18,6 +21,9 @@ namespace Moamen.Training.APIs.MappingProfiles
         public DepartmentProfile()
         {
             CreateMap<Department, DepartmentGet>()
+                ;
+
+            CreateMap<DepartmentPost, Department>()
                 ;
         }
     }

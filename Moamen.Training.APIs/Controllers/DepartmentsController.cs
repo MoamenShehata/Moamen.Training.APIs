@@ -29,7 +29,7 @@ namespace Moamen.Training.APIs.Controllers
             return Ok(mapper.Map<IEnumerable<DepartmentGet>>(departments));
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = nameof(GetDepartment))]
         public IActionResult GetDepartment(int id)
         {
             var department = departmentService.GetById(id);
@@ -39,31 +39,72 @@ namespace Moamen.Training.APIs.Controllers
             return Ok(mapper.Map<DepartmentGet>(department));
         }
 
-        [HttpGet("{id}/employees")]
-        public IActionResult GetDepartmentEmployees(int id)
+        [HttpPost]
+        public IActionResult CreateDepartment([FromBody] DepartmentPost departmentPost)
         {
-            var department = departmentService.GetById(id);
+            if (departmentPost == null)
+                return BadRequest();
+
+            var department = mapper.Map<Department>(departmentPost);
+
+            var isCreated = departmentService.Create(department);
+            if (!isCreated)
+                throw new Exception("Failed to create Department instance");
+
+            var departmentGet = mapper.Map<DepartmentGet>(department);
+            return CreatedAtRoute(nameof(GetDepartment), new { id = department.Id },
+                departmentGet);
+        }
+
+
+        [HttpGet("{departmentId}/employees")]
+        public IActionResult GetDepartmentEmployees(int departmentId)
+        {
+            var department = departmentService.GetById(departmentId);
             if (department == null)
                 return NotFound();
 
-            var employees = employeeService.GetAllByDepartment(id);
+            var employees = employeeService.GetAllByDepartment(departmentId);
             return Ok(mapper.Map<IEnumerable<EmployeeGet>>(employees));
         }
 
-        [HttpGet("{id}/employees/{employeeId}")]
-        public IActionResult GetDepartmentEmployee(int id, int employeeId)
+        [HttpPost("{departmentId}/employees")]
+        public IActionResult CreateDepartmentEmployee(int departmentId, [FromBody] EmployeePost employeePost)
         {
-            var department = departmentService.GetById(id);
+            var department = departmentService.GetById(departmentId);
             if (department == null)
                 return NotFound();
 
-            var employee = employeeService.GetByIdAndDepartmentId(employeeId, id);
+            if (employeePost == null)
+                return BadRequest();
+
+
+            var employee = mapper.Map<Employee>(employeePost);
+            employee.DepartmentId = departmentId;
+
+            var isCreated = employeeService.Create(employee);
+            if (!isCreated)
+                throw new Exception("Failed to create Employee instance");
+
+            var employeeGet = mapper.Map<EmployeeGet>(employee);
+            return CreatedAtRoute(nameof(GetDepartmentEmployee),
+                new { departmentId = departmentId, employeeId = employee.Id },
+                employeeGet);
+        }
+
+        [HttpGet("{departmentId}/employees/{employeeId}", Name = nameof(GetDepartmentEmployee))]
+        public IActionResult GetDepartmentEmployee(int departmentId, int employeeId)
+        {
+            var department = departmentService.GetById(departmentId);
+            if (department == null)
+                return NotFound();
+
+            var employee = employeeService.GetByIdAndDepartmentId(employeeId, departmentId);
             if (employee == null)
                 return NotFound();
 
             return Ok(mapper.Map<EmployeeGet>(employee));
         }
-
 
     }
 }

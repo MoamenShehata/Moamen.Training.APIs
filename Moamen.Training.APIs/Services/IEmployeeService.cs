@@ -10,6 +10,7 @@ namespace Moamen.Training.APIs.Services
         IEnumerable<Employee> GetAllByDepartment(int departmentId);
         Employee GetById(int id);
         Employee GetByIdAndDepartmentId(int id, int departmentId);
+        bool Create(Employee employee);
     }
 
 
@@ -19,6 +20,13 @@ namespace Moamen.Training.APIs.Services
         public EmployeeService(DataContext dataContext)
         {
             this.dataContext = dataContext;
+        }
+
+        public bool Create(Employee employee)
+        {
+            dataContext.Employees.Add(employee);
+            dataContext.SaveChanges();
+            return employee.Id != 0;
         }
 
         public IEnumerable<Employee> GetAll() => dataContext.Employees.ToList();
